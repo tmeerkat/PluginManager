@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32802.440
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginManager", "PluginManager\PluginManager.csproj", "{DA445C25-261D-4BDD-8936-1B178E7CCE08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginManagerTests", "PluginManagerTests\PluginManagerTests.csproj", "{0B8D0884-EA6E-43E6-B5D8-8C89BF80F558}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{DA445C25-261D-4BDD-8936-1B178E7CCE08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA445C25-261D-4BDD-8936-1B178E7CCE08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA445C25-261D-4BDD-8936-1B178E7CCE08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B8D0884-EA6E-43E6-B5D8-8C89BF80F558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B8D0884-EA6E-43E6-B5D8-8C89BF80F558}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B8D0884-EA6E-43E6-B5D8-8C89BF80F558}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B8D0884-EA6E-43E6-B5D8-8C89BF80F558}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

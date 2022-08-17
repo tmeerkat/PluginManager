@@ -22,10 +22,12 @@ namespace PluginManager
         /// Loads all plugins that implement IPluginManagerPlugin from the directory 
         /// where the PluginManager dll has been installed.
         /// </summary>
+        /// <param name="pluginNamePattern">A filename pattern that all plugin dlls will 
+        /// share, such as myApp.plugin. By default, this value is set to plugin.</param>
         /// <returns>Returns a list of loaded IPluginManagerPlugins.</returns>
-        public List<IPluginManagerPlugin> LoadPlugins()
+        public List<IPluginManagerPlugin> LoadPlugins(string pluginNamePattern = "plugin")
         {
-            return LoadPlugins(ApplicationPath);
+            return LoadPlugins(ApplicationPath, pluginNamePattern);
         }
 
         /// <summary>
@@ -97,7 +99,7 @@ namespace PluginManager
         }
 
         /// <summary>
-        /// Attempts to load the plugin with the given path into the DICOM Router.
+        /// Attempts to load the plugin with the given path.
         /// </summary>
         /// <param name="pluginPath">Path to the plugin to load.</param>
         private IPluginManagerPlugin LoadPlugin(string pluginPath)
