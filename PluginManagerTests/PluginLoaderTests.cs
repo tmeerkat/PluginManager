@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PluginManager;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
@@ -17,13 +18,21 @@ namespace PluginManagerTests
         /// and jumping into the basic code.
         /// </summary>
         [TestMethod]
-        public void TestMethod1()
+        public void _TestingSetup()
         {
             var loggerMock = new Mock<ILogger<PluginLoader>>();
             var pluginLoader = new PluginLoader(loggerMock.Object);
 
-            var expected = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Assert.AreEqual(expected, pluginLoader.ApplicationPath);
+            var expectedPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Assert.AreEqual(expectedPath, pluginLoader.ApplicationPath);
+
+            var plugins = new List<string>();
+            var di = new DirectoryInfo(expectedPath);
+            FileInfo[] files = di.GetFiles("*.dll", SearchOption.TopDirectoryOnly);
+
+            foreach (FileInfo file in files)
+                if (Path.GetFileName(file.FullName).ToLower().Contains("plugin"))
+                    plugins.Add(file.FullName);
         }
     }
 }
