@@ -4,6 +4,7 @@ using Moq;
 using PluginManager;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -31,8 +32,11 @@ namespace PluginManagerTests
             FileInfo[] files = di.GetFiles("*.dll", SearchOption.TopDirectoryOnly);
 
             foreach (FileInfo file in files)
-                if (Path.GetFileName(file.FullName).ToLower().Contains("plugin"))
+                if (Path.GetFileName(file.FullName).ToLower().Contains("implemented"))
                     plugins.Add(file.FullName);
+
+            Debug.WriteLine($"Found {plugins.Count} plugins.");
+            Assert.AreEqual(4, plugins.Count, $"Build the test plugin projects and make sure the dlls appear in {expectedPath}.");
         }
     }
 }
