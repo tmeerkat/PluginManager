@@ -38,9 +38,9 @@ namespace PluginManager
         /// <param name="pluginNamePattern">A filename pattern that all plugin dlls will 
         /// share, such as myApp.plugin. By default, this value is set to plugin.</param>
         /// <returns>Returns a list of loaded IPluginManagerPlugins.</returns>
-        public List<IPluginManagerPlugin> LoadPlugins(string pluginsPath, string pluginNamePattern = "plugin")
+        public List<IPluginManagerPlugin> LoadPlugins(string pluginsPath, string pluginNamePattern)
         {
-            _logger.LogInformation("Loading installed plugins from " + pluginsPath);
+            _logger?.LogInformation("Loading installed plugins from " + pluginsPath);
             List<string> foundPlugins = FindPlugins(pluginsPath, pluginNamePattern);
 
             //  Load the plugins
@@ -88,11 +88,12 @@ namespace PluginManager
 
                 //  Get valid plugins, and then unload the domain to clear up memory
                 plugins = finder.FindPlugins(pluginsPath, pluginNamePattern);
+                _logger?.LogDebug(finder.Log.ToString());
                 AppDomain.Unload(domain);
             }
             catch (Exception e)
             {
-                _logger.LogError("There was an error creating the Plugin Loader.", e);
+                _logger?.LogError("There was an error creating the Plugin Loader.", e);
             }
 
             return plugins;
@@ -114,14 +115,14 @@ namespace PluginManager
             try
             {
                 var plugin = (IPluginManagerPlugin)Activator.CreateInstance(type);
-                _logger.LogInformation("Loaded " + plugin.Name +
+                _logger?.LogInformation("Loaded " + plugin.Name +
                     " plugin, version " + plugin.Version + ".");
 
                 return plugin;
             }
             catch (NullReferenceException e)
             {
-                _logger.LogError("Could not load plugin.", e);
+                _logger?.LogError("Could not load plugin.", e);
                 return null;
             }
         }

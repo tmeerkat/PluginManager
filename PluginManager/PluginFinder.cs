@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text;
 
 namespace PluginManager
 {
@@ -13,12 +14,7 @@ namespace PluginManager
     /// </summary>
     class PluginFinder : MarshalByRefObject
     {
-        private ILogger _logger;
-
-        public void SetLogger(ILogger<PluginFinder> logger)
-        {
-            _logger = logger;
-        }
+        public StringBuilder Log = new StringBuilder();
 
         /// <summary>
         /// Searches through the given path for any valid plugin dlls.
@@ -38,7 +34,7 @@ namespace PluginManager
                 //  Determine all dll files in the given path
                 DirectoryInfo di = new DirectoryInfo(path);
                 FileInfo[] files = di.GetFiles("*.dll", SearchOption.TopDirectoryOnly);
-                _logger?.LogDebug("Loading Plugins: Found " + files.Length + " dlls.");
+                Log.AppendLine("Loading Plugins: Found " + files.Length + " dlls.");
 
                 //  If the file is a valid plugin, add it to the results
                 foreach (FileInfo file in files)
@@ -50,13 +46,13 @@ namespace PluginManager
             {
                 if (e.Message.Contains("does not have the required permission"))
                 {
-                    _logger?.LogWarning("User does not have permission to access \"" + path + "\"");
+                    Log.AppendLine("User does not have permission to access \"" + path + "\"");
                 }
                 else
-                    _logger?.LogError("Error accessing files: ", e);
+                    Log.AppendLine($"Error accessing files: {e}");
             }
 
-            _logger?.LogDebug("Loading Plugins: Found " + plugins.Count + " plugins.");
+            Log.AppendLine("Loading Plugins: Found " + plugins.Count + " plugins.");
             return plugins;
         }
 
@@ -69,20 +65,20 @@ namespace PluginManager
         {
             bool result = false;
             Assembly asm = null;
-            _logger?.LogDebug("Attempting to load " + Path.GetFileName(path) + " as a plugin.");
+            Log.AppendLine("Attempting to load " + Path.GetFileName(path) + " as a plugin.");
 
             try
             {
                 asm = Assembly.LoadFrom(path);
                 foreach (Type t in asm.GetTypes())
-                    if (t.GetInterface("IPlugin") != null)
+                    if (t.GetInterface("IPluginManagerPlugin") != null)
                     {
                         result = true;
-                        _logger?.LogDebug("Loading Plugins: Identified " + Path.GetFileName(path) + " as a plugin.");
+                        Log.AppendLine("Loading Plugins: Identified " + Path.GetFileName(path) + " as a plugin.");
                         break;
                     }
                     else
-                        _logger?.LogDebug(Path.GetFileName(path) + "." + t.Name + " does not appear to be a plugin.");
+                        Log.AppendLine(Path.GetFileName(path) + "." + t.Name + " does not appear to be a plugin.");
             }
             #region Exception Handling
             catch (ReflectionTypeLoadException ex)
@@ -90,22 +86,22 @@ namespace PluginManager
                 //  Common.dll always throws an exception, so skip it.
                 if (asm != null && !asm.ManifestModule.Name.ToLower().Equals("common.dll"))
                 {
-                    _logger?.LogDebug("There was a reflection type load exception caught.");
-                    _logger?.LogDebug("Could not load the plugin " + path);
-                    _logger?.LogDebug(ex.Message);
-                    _logger?.LogDebug(ex.StackTrace);
+                    Log.AppendLine("There was a reflection type load exception caught.");
+                    Log.AppendLine("Could not load the plugin " + path);
+                    Log.AppendLine(ex.Message);
+                    Log.AppendLine(ex.StackTrace);
                     foreach (var item in ex.LoaderExceptions)
                     {
-                        _logger?.LogDebug(item.Message.ToString());
+                        Log.AppendLine(item.Message.ToString());
                     }
                 }
             }
             catch (Exception e)
             {
                 //  An Exception most likely means an invalid plugin
-                _logger?.LogDebug("Could not load the plugin " + path);
-                _logger?.LogDebug(e.Message);
-                _logger?.LogDebug(e.StackTrace);
+                Log.AppendLine("Could not load the plugin " + path);
+                Log.AppendLine(e.Message);
+                Log.AppendLine(e.StackTrace);
             }
             #endregion
 

@@ -1,8 +1,8 @@
 ﻿namespace PluginManager
 {
-    public class IPluginManagerPlugin
+    public interface IPluginManagerPlugin
     {
-        public string Version { get; }
-        public string Name { get; }
+        string Version { get; }
+        string Name { get; }
     }
 }
